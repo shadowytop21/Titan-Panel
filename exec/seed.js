@@ -1,7 +1,6 @@
 const axios = require('axios');
 const { db } = require('../handlers/db');
-const CatLoggr = require('cat-loggr');
-const log = new CatLoggr();
+const log = new (require('cat-loggr'))();
 const readline = require('readline');
 const { v4: uuidv4 } = require('uuid');
 const config = require('../config.json');
@@ -11,10 +10,8 @@ const rl = readline.createInterface({
   output: process.stdout
 });
 
-// https://i.imgu
 async function seed() {
   try {
-    // First check if there are any images already in the database 
     const existingImages = await db.get('images');
     if (existingImages && existingImages.length > 0) {
       rl.question('\'images\' is already set in the database. Do you want to continue seeding? (y/n) ', async (answer) => {
@@ -37,10 +34,9 @@ async function seed() {
   }
 }
 
-// r.com/uNob
 async function performSeeding() {
   try {
-    const imagesIndexResponse = await axios.get('https://raw.githubusercontent.com/skyportlabs/images_v2/main/seed/0.1.0-beta2.json');
+    const imagesIndexResponse = await axios.get('https://raw.githubusercontent.com/achul123/images_v2/refs/heads/main/seed/0.1.0-beta2.json');
     const imageUrls = imagesIndexResponse.data;
     let imageDataArray = [];
 
