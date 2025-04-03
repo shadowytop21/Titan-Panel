@@ -1,24 +1,43 @@
-![\[!image\](https://i.imgur.com/SU7QypZ.png)](https://i.imgur.com/SU7QypZ.png)
 
-![Discord](https://img.shields.io/discord/1253782902618194011?label=Discord&logo=Discord&logoColor=white&style=for-the-badge)
-![GitHub contributors](https://img.shields.io/github/contributors/skyportlabs/panel?style=for-the-badge)
-
-# Skyport Panel
-
-## Overview
-Skyport is an open source panel for managing and operating game servers and applications built using Node.js with Express and Dockerode. [Click here to join our Discord.](https://discord.gg/skyport)
+<h2> DracoPanel is an open-source panel for managing your game servers, applications, and more built with modern technologies such as Node.js, Docker, and Express - made to work with our DracoDaemon software.</h2>
 
 ## Installation
-You can read our documentation at [skyport.dev](https://skyport.dev)
+### Picking a Server OS
 
-## Configuration
-Edit the `config.json` file in the root directory to set up the application settings including the database connection and port.
+DracoPanel runs on various operating systems, so pick whichever you are most comfortable using.
 
-## Usage
-Navigate to `http://localhost:<port>` to access the Skyport Panel. Log in with your user credentials to manage and view instances.
+| Operating System | Version |     Supported      | Notes                                                       |
+|------------------|---------|:------------------:|-------------------------------------------------------------|
+| **Ubuntu**       | 24.04   | ✅ | Documentation written assuming Ubuntu 24.04 as the OS. |
+|                  | 22.04   | ✅ |                                                             |
+| **CentOS**       | 7       | ✅ | Extra repos are required.                                   |
+|                  | 8       | ✅ | Note that CentOS 8 is EOL. Use Rocky or Alma Linux.         |
+| **Debian**       | 11      | ✅ |                                                             |
+|                  | 12      | ✅ |                                                             |
+| **Windows**      | 11      | ⚠️ | May have issues due to Windows firewall.                   |
+|                  | 10      | ⚠️ |                                                             |
+| **macOS**        | 10.15+  | ⚠️ |                                                             |
 
-## Contributing
-Contributions are welcome. Please fork the repository and submit pull requests with your proposed changes.
+## Dependencies
 
-## License
-(c) 2024 Matt James and contributors. All rights reserved. Licensed under the MIT License.
+* Node.js `v20` and higher (Nodejs `v20` recommended).
+* ### Installation Nodejs 20
+
+```bash
+curl -sL https://deb.nodesource.com/setup_20.x | sudo bash -
+```
+```bash
+apt-get install nodejs -y
+```
+
+### Installation Panel
+
+To install and start the Draco Panel , run the following commands:
+
+```bash
+git clone https://github.com/draco-labes/DracoPanel.git && cd DracoPanel && npm install && npm run seed && npm run createUser && node .
+```
+
+- Skyport (EOL)
+- SRYDEN (https://sryden.com)
+- Edited by **hopingboyz**
