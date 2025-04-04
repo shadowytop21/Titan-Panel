@@ -436,7 +436,7 @@
     </div>
     
     <div class="pagination">
-      <button id="loadMore" class="load-more-btn">
+      <button id="loadMore" class="load-more-btn" disabled>
         Load More Plugins
       </button>
     </div>
@@ -447,7 +447,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h3 class="modal-title">Installing Plugin</h3>
-        <button class="modal-close" onclick="closeModal()">&times;</button>
+        <button class="modal-close" id="modalCloseBtn">&times;</button>
       </div>
       <div class="modal-body">
         <div class="progress-container">
@@ -473,7 +473,7 @@
 <script>
   // Configuration
   const API_URL = "https://api.spiget.org/v2/resources/free";
-  const ITEMS_PER_PAGE = 12; // Reduced for better performance
+  const ITEMS_PER_PAGE = 12;
   let currentPage = 0;
   let allPlugins = [];
   let isLoading = false;
@@ -484,6 +484,7 @@
   const searchInput = document.getElementById("searchInput");
   const loadMoreBtn = document.getElementById("loadMore");
   const installModal = document.getElementById("installModal");
+  const modalCloseBtn = document.getElementById("modalCloseBtn");
   const installProgress = document.getElementById("installProgress");
   const installStatus = document.getElementById("installStatus");
   const toast = document.getElementById("toast");
@@ -496,6 +497,7 @@
     // Setup event listeners
     searchInput.addEventListener('input', debounce(filterPlugins, 300));
     loadMoreBtn.addEventListener('click', fetchPlugins);
+    modalCloseBtn.addEventListener('click', closeModal);
     
     // Close modal when clicking outside
     installModal.addEventListener('click', (e) => {
@@ -541,6 +543,9 @@
     } catch (error) {
       console.error('Error fetching plugins:', error);
       showToast('Failed to load plugins. Please try again.', 'error');
+      hasMore = false;
+      loadMoreBtn.disabled = true;
+      loadMoreBtn.textContent = 'Error loading plugins';
     } finally {
       isLoading = false;
       hideLoading();
@@ -549,10 +554,11 @@
 
   // Render plugins to the DOM
   function renderPlugins(plugins) {
-    if (!plugins.length) {
+    if (!plugins.length && currentPage > 1) {
+      // Only show empty state if we've already tried loading
       pluginContainer.innerHTML = `
         <div class="empty-state">
-          <div class="empty-icon">📦</div>
+          <div class="empty-icon">??</div>
           <h3>No plugins found</h3>
           <p>Try adjusting your search or check your connection</p>
         </div>
@@ -568,10 +574,10 @@
               <img src="data:image/jpeg;base64,${plugin.icon.data}" 
                    alt="${plugin.name} icon" 
                    class="plugin-icon"
-                   onerror="this.src='https://via.placeholder.com/48/1e293b/94a3b8?text=📦'">
+                   onerror="this.onerror=null;this.src='https://via.placeholder.com/48/1e293b/94a3b8?text=??'">
             ` : `
               <div class="plugin-icon" style="background: #1e293b; display: flex; align-items: center; justify-content: center;">
-                📦
+                ??
               </div>
             `}
             <div>
@@ -582,10 +588,10 @@
           
           <div class="plugin-meta">
             <span class="plugin-rating">
-              ⭐ ${plugin.rating ? plugin.rating.average.toFixed(1) : 'N/A'}
+              ★ ${plugin.rating ? plugin.rating.average.toFixed(1) : 'N/A'}
             </span>
             <span class="plugin-downloads">
-              📥 ${plugin.downloads ? formatNumber(plugin.downloads) : '0'}
+              ↓ ${plugin.downloads ? formatNumber(plugin.downloads) : '0'}
             </span>
           </div>
           
@@ -603,7 +609,7 @@
               </svg>
               Install
             </button>
-            <a href="https://spigotmc.org/resources/${plugin.id}" 
+            <a href="https://www.spigotmc.org/resources/${plugin.id}" 
                target="_blank" 
                rel="noopener noreferrer"
                class="btn btn-secondary">
@@ -630,8 +636,8 @@
     }
     
     const filtered = allPlugins.filter(plugin => 
-      plugin.name.toLowerCase().includes(searchTerm) ||
-      (plugin.author && plugin.author.name.toLowerCase().includes(searchTerm)) ||
+      (plugin.name && plugin.name.toLowerCase().includes(searchTerm)) ||
+      (plugin.author && plugin.author.name && plugin.author.name.toLowerCase().includes(searchTerm)) ||
       (plugin.description && plugin.description.toLowerCase().includes(searchTerm))
     );
     
@@ -665,15 +671,20 @@
       
       updateProgress(100, 'Installation complete!');
       
-      // Redirect to download handler
+      // Show success message
+      showToast(`Successfully installed ${pluginName}`, 'success');
+      
+      // Redirect to download handler after a brief delay
       setTimeout(() => {
         window.location.href = redirectUrl;
-      }, 1000);
+      }, 1500);
       
     } catch (error) {
       console.error('Error installing plugin:', error);
       updateProgress(0, 'Installation failed');
       showToast(`Failed to install ${pluginName}`, 'error');
+    } finally {
+      setTimeout(closeModal, 2000);
     }
   }
 
@@ -688,7 +699,9 @@
   function hideLoading() {
     const loading = document.getElementById('loading');
     if (loading) loading.style.display = 'none';
-    loadMoreBtn.disabled = false;
+    if (hasMore) {
+      loadMoreBtn.disabled = false;
+    }
   }
 
   // Show modal with progress
@@ -763,12 +776,14 @@
 
   // Utility function to truncate text
   function truncate(text, length) {
+    if (!text) return '';
     if (text.length <= length) return text;
     return text.substring(0, length) + '...';
   }
 
   // Utility function to format large numbers
   function formatNumber(num) {
+    if (!num) return '0';
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
 </script>
