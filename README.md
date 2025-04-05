@@ -39,4 +39,4 @@ git clone https://github.com/draco-labes/DracoPanel.git && cd DracoPanel && npm 
 ```
 
 
-- Owner **hoping boy** & **Jishnu**
+- Made by **hoping boy** & **Jishnu** ✅
