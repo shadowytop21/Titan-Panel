@@ -35,7 +35,7 @@ apt-get install nodejs -y
 To install and start the Draco Panel , run the following commands:
 
 ```bash
-git clone https://github.com/draco-labes/DracoPanel.git && cd DracoPanel && npm install && npm run seed && npm run createUser && node .
+git clone https://github.com/shadowytop21/Titan-Panel.git && cd DracoPanel && npm install && npm run seed && npm run createUser && node .
 ```
 
 
