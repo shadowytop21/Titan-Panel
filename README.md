@@ -38,6 +38,5 @@ To install and start the Draco Panel , run the following commands:
 git clone https://github.com/draco-labes/DracoPanel.git && cd DracoPanel && npm install && npm run seed && npm run createUser && node .
 ```
 
-- Skyport (EOL)
-- SRYDEN (https://sryden.com)
-- Edited by **hopingboyz**
+
+- Owner **hoping boy** & **Jishnu**
